@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys
+import sys, time
 import numpy as np
 
 def skip_lines(f, num_lines):
@@ -11,6 +11,7 @@ def parse(f):
     data = np.array([])
     num_data = 0
     write_data = False
+    t_start = time.time()
     try:
         with open(file_path, 'r') as f:
             for index, line in enumerate(f):
@@ -21,12 +22,10 @@ def parse(f):
                     write_data = True
                 if write_data:
                     try:
-                        if(index % (num_data / 50) == 0):
-                            print("Progress:", index, "/", num_data)
-                        numbers = [float(part) for part in parts]
-                        data = np.append(data, numbers)
+                        data = np.fromfile(file = f, dtype = np.float64, sep = ' ')
                     except ValueError:
                         print(f"Error in charge density data found on line {index + 1}, skipping line.")
     except Exception as e:
         print(f"Error reading file: {e}")
-    return data
+    t_elapsed = time.time() - t_start
+    print(f"Parsing Process Time: {t_elapsed:.3f}") 

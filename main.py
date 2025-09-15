@@ -17,5 +17,6 @@ def main():
         sys.exit(1)
     data = parse(args.filename)
     np.save('CHGCAR_sum_data', data)
+    
 if __name__ == "__main__":
     main()
