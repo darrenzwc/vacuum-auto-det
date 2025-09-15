@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import sys, time
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def skip_lines(f, num_lines):
     for i in range(num_lines):
@@ -18,7 +20,7 @@ def parse(f):
                 parts = line.strip().split()
                 if not write_data and len(parts) == 3 and parts[0].isdigit():
                     num_data = np.pow(int(parts[0]), 3)
-                    print("Parsing", num_data, "charge densities.")
+                    print("Parsing", num_data, "charge densities")
                     write_data = True
                 if write_data:
                     try:
@@ -28,4 +30,19 @@ def parse(f):
     except Exception as e:
         print(f"Error reading file: {e}")
     t_elapsed = time.time() - t_start
-    print(f"Parsing Process Time: {t_elapsed:.3f}") 
+    print(f"Parsing Process Time: {t_elapsed:.3f} seconds")
+    plot(data)
+    return data 
+
+def plot(data):
+    d = data
+    if isinstance(data, (str, bytes)) and data.endswith(".npy"):
+        d = np.load(data)
+    sns.histplot(data = d, bins = 1000, log_scale = True)
+    plt.show()
+    plt.savefig("plot.png")
+
+    
+        
+    
+    
